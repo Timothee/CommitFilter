@@ -16,7 +16,7 @@
 	"content_scripts": [
 		{
 			"matches": ["https://*.github.com/*"],
-			"js": ["content_script.js"],
+			"js": [ "lib/jquery-1.9.1.min.js", "content_script.js"],
 			"css": ["commitfilter.css"]
 		}
 	],
