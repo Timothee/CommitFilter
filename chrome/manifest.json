@@ -1,12 +1,14 @@
 {
 	"name": "Commit Filter for GitHub",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"manifest_version": 2,
 
 	"description": "Commit Filter is a Chrome extension that lets you filter out certain files when you're reviewing commits and pull requests.",
 	"icons": {
 		"48": "images/logo_48x48.png"
 	},
+
+    "options_page": "options.html",
 
 	"background": {
 		"scripts": ["lib/jquery-1.9.1.min.js", "lib/underscore-min.js",
@@ -16,7 +18,7 @@
 	"content_scripts": [
 		{
 			"matches": ["https://*.github.com/*"],
-			"js": [ "lib/jquery-1.9.1.min.js", "content_script.js"],
+			"js": [ "lib/jquery-1.9.1.min.js", "lib/underscore-min.js", "content_script.js"],
 			"css": ["commitfilter.css"]
 		}
 	],
