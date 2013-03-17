@@ -8,31 +8,44 @@ $(document).ready(function() {
     }
 
     function matchRepo(filePatterns, repoPattern) {
-        var repoRegex = new RegExp(repoPattern);
-        if (repoRegex.test(currentRepo)) {
-            console.log('repo match');
-            var files = $(".file");
-            _.each(files, function(file) {
-                matchFile(file, filePatterns);
-            });
-        }
+				try {
+						var repoRegex = new RegExp(repoPattern);
+						if (repoRegex.test(currentRepo)) {
+								console.log('repo match');
+								var files = $(".file");
+								_.each(files, function(file) {
+										matchFile(file, filePatterns);
+								});
+						}
+				}
+				catch (e) {
+					console.log(e);
+				}
     }
 
     function matchFile(file, filePatterns) {
         _.each(filePatterns, function(filePattern) {
-            var regex = new RegExp(filePattern);
-            if (regex.test($(file).find('.meta').data('path'))) {
-                console.log('match file');
-                hideFile(file);
-            }
+						try {
+								var regex = new RegExp(filePattern);
+								if (regex.test($(file).find('.meta').data('path'))) {
+										console.log('match file');
+										hideFile(file);
+								}
+						}
+						catch (e) {
+								console.log(e);
+						}
         });
     }
 
     function hideFile(file) {
-        $(file).find('.data').css('display', 'none');
-        $(file).append("<div class='filter_notice'>This file has been filtered out. <a href='#' class='unfilter'>Click to display.</a></div>");
-        $(file).find('.unfilter').bind('click', displayFile);
-        console.log(file);
+				if (!$(file).hasClass('filtered')) {
+      		  $(file).find('.data').css('display', 'none');
+      		  $(file).append("<div class='filter_notice'>This file has been filtered out. <a href='#' class='unfilter'>Click to display.</a></div>");
+      		  $(file).find('.unfilter').bind('click', displayFile);
+						$(file).addClass('filtered');
+      		  console.log(file);
+				}
     }
 
     function displayFile(e) {
