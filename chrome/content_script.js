@@ -30,7 +30,14 @@ $(document).ready(function() {
 
     function hideFile(file) {
         $(file).find('.data').css('display', 'none');
+        $(file).append("<div class='filter_notice'>This file has been filtered out. <a href='#' class='unfilter'>Click to display.</a></div>");
+        $(file).find('.unfilter').bind('click', displayFile);
         console.log(file);
     }
 
+    function displayFile(e) {
+        e.preventDefault();
+        $(this).parent().parent().find('.data').css('display', 'block');
+        $(this).parent().remove();
+    }
 });
