@@ -1,10 +1,11 @@
 $(document).ready(function() {
     var currentRepo = $(".js-current-repository").first().attr('href');
-    
+
     chrome.extension.sendMessage({getPatterns: true}, processPatterns);
 
     function processPatterns(response) {
         _.each(response, matchRepo);
+				addFilterButtons();
     }
 
     function matchRepo(filePatterns, repoPattern) {
@@ -53,4 +54,17 @@ $(document).ready(function() {
         $(this).parent().parent().find('.data').css('display', 'block');
         $(this).parent().remove();
     }
+
+		function addFilterButtons() {
+				var files = $('.file');
+				_.each(files, function(file) {
+						if (!$(file).hasClass('filtered')) {
+								$(file).find('.actions .button-group').prepend('<a class="minibutton">Filter</a>');
+								$(file).find('.minibutton').click(function(e) {
+									console.log(e);
+									console.log(this);
+								});
+						}
+				});
+		}
 });
