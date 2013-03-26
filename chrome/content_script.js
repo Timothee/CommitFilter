@@ -75,6 +75,10 @@ $(document).ready(function() {
 
     function processPatterns(response) {
         _.each(response, matchRepo);
+        // reset scroll position to what it should be once files have been hidden
+        if (document.location.hash) {
+            $(document.location.hash)[0].scrollIntoView();
+        }
     }
 
     function makeARegex(pattern) {
