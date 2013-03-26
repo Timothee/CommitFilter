@@ -1,4 +1,36 @@
-.filter_notice {
+.filter-notice { display: none; }
+.filtered .data, .filtered .filter-button, .filtered .filter-form { display: none; }
+.filtered .filter-notice { display: block; }
+.filtered.displayed .data { display: block }
+.filtered.displayed .filter-notice { display: none; }
+
+.filter-form {
+	background: rgb(255, 252, 207);
+	border-bottom: rgb(215, 215, 215) 1px solid;
+	padding: 5px;
+}
+.filter-form form {
+}
+
+.file .filter-form input {
+	min-height: 26px;
+	padding: 0px 5px;
+	margin: 0px 4px;
+	width: 300px;
+}
+
+.file .filter-form a {
+	float: right;
+	margin: 0px 4px;
+}
+.filter-form .tip {
+	clear: both;
+	margin-top: 2px;
+	color: #555;
+	font-size: 11px;
+	text-shadow: 0 1px 0 #fff;
+}
+.filter-notice {
     background: #fbfbfb;
     font-size: 12px;
     color: #333;
