@@ -1,8 +1,14 @@
+if (!localStorage.hasOwnProperty('commit_filters')) {
+    localStorage['commit_filters'] = "{}";
+}
 chrome.extension.onMessage.addListener(
         function(request, sender, sendResponse) {
             switch(request.action) {
                 case 'getPatterns':
-                    sendResponse(JSON.parse(localStorage['commit_filters']));
+                    var response = JSON.parse(localStorage['commit_filters']);
+                    if (!$.isEmptyObject(response)) {
+                        sendResponse(response);
+                    }
                     break;
                 case 'saveFilter':
                     var filters = JSON.parse(localStorage['commit_filters']);

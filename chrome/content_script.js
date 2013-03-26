@@ -62,11 +62,11 @@ $(document).ready(function() {
         var repoRegex = $(this).siblings('[name=repo_regex]').val();
         var fileRegex = $(this).siblings('[name=file_regex]').val();
         chrome.extension.sendMessage({action: "saveFilter", repoRegex: repoRegex,
-            fileRegex: fileRegex}, function() {
+            fileRegex: fileRegex}, _.bind(function() {
                 $(this).parents('.filter-form').slideUp();
                 $(this).parents('.file').find('.filter-button').removeClass('disabled');
                 getPatternsAndProcess();
-            });
+            }, e.target));
     }
 
     function getPatternsAndProcess() {
@@ -78,7 +78,7 @@ $(document).ready(function() {
     }
 
     function makeARegex(pattern) {
-        return new RegExp(pattern.replace(/\*/g, "[^/]*").replace(/\*\*/g, ".*"));
+        return new RegExp(pattern.replace(/([^\*])(\*)([^\*])/g, "$1[^\/]*$3").replace(/\*\*/g, ".*"));
     }
 
     function matchRepo(filePatterns, repoPattern) {
