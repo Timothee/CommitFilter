@@ -2,7 +2,7 @@ $(document).ready(function() {
     var currentRepo = $(".js-current-repository").first().attr('href');
 
 		modifyInterface();
-    chrome.extension.sendMessage({getPatterns: true}, processPatterns);
+		getPatternsAndProcess();
 
 		function modifyInterface() {
 			var files = $('.file');
@@ -31,6 +31,7 @@ $(document).ready(function() {
 																	"</form>" +
 																	"<div class='tip'>Type <b>*</b> to match any string for that directory level and <b>**</b> to potentially match multiple directory levels.</div>" +
 																	"</div>");
+			$(file).find('.save').click(saveFilter);
 			$(file).find('.cancel').click(hideNewFilterForm);
 			$(file).find('.filter-form').hide();
 		}
@@ -44,13 +45,45 @@ $(document).ready(function() {
 			return $(file).find('.meta').data('path');
 		}
 
+		function showNewFilterForm(e) {
+			e.preventDefault();
+			$(this).parents('.meta').siblings('.filter-form').slideDown();
+			$(this).addClass('disabled');
+		}
+
+		function hideNewFilterForm(e) {
+			e.preventDefault();
+			$(this).parents('.filter-form').slideUp();
+			$(this).parents('.file').find('.filter-button').removeClass('disabled');
+		}
+
+		function saveFilter(e) {
+			e.preventDefault();
+			var repoRegex = $(this).siblings('[name=repo_regex]').val();
+			var fileRegex = $(this).siblings('[name=file_regex]').val();
+			chrome.extension.sendMessage({action: "saveFilter", repoRegex: repoRegex,
+																	 fileRegex: fileRegex}, function() {
+																			$(this).parents('.filter-form').slideUp();
+																			$(this).parents('.file').find('.filter-button').removeClass('disabled');
+																			getPatternsAndProcess();
+																	 });
+		}
+
+		function getPatternsAndProcess() {
+			chrome.extension.sendMessage({action: "getPatterns"}, processPatterns);
+		}
+
     function processPatterns(response) {
         _.each(response, matchRepo);
     }
 
+		function makeARegex(pattern) {
+			return new RegExp(pattern.replace(/\*/g, "[^/]*").replace(/\*\*/g, ".*"));
+		}
+
     function matchRepo(filePatterns, repoPattern) {
 				try {
-						var repoRegex = new RegExp(repoPattern);
+						var repoRegex = makeARegex(repoPattern);
 						if (repoRegex.test(currentRepo)) {
 								console.log('repo match');
 								var files = $(".file");
@@ -67,7 +100,7 @@ $(document).ready(function() {
     function matchFile(file, filePatterns) {
         _.each(filePatterns, function(filePattern) {
 						try {
-								var regex = new RegExp(filePattern);
+								var regex = makeARegex(filePattern);
 								if (regex.test($(file).find('.meta').data('path'))) {
 										console.log('match file');
 										hideFile(file);
@@ -89,37 +122,4 @@ $(document).ready(function() {
 				$(this).parents('.file').addClass('displayed');
     }
 
-		function addFilterButtons() {
-				var files = $('.file');
-				_.each(files, function(file) {
-						if (!$(file).hasClass('filtered')) {
-								$(file).find('.actions .button-group').prepend('<a class="minibutton">Filter</a>');
-								$(file).find('.minibutton').click(showNewFilter);
-						}
-				});
-		}
-
-		function showNewFilter() {
-			console.log(this);
-			var meta = $(this).parents('.meta');
-			var currentFile = meta.data('path');
-			meta.after("<div class='new-filter'><input type='text' value='" + currentRepo + "'/><span class='file-regex'>" + currentFile + "</span></div>");
-
-		}
-
-		function showNewFilterForm(e) {
-			e.preventDefault();
-			$(this).parents('.meta').siblings('.filter-form').slideDown();
-			$(this).addClass('disabled');
-		}
-
-		function hideNewFilterForm(e) {
-			e.preventDefault();
-			$(this).parents('.filter-form').slideUp();
-			$(this).parents('.file').find('.filter-button').removeClass('disabled');
-		}
-
-		function saveFilter() {
-
-		}
 });
