@@ -78,7 +78,7 @@ $(document).ready(function() {
     }
 
     function makeARegex(pattern) {
-        return new RegExp(pattern.replace(/([^\*])(\*)([^\*])/g, "$1[^\/]*$3").replace(/\*\*/g, ".*"));
+        return new RegExp("^" + pattern.replace(/([^\*])(\*)([^\*])/g, "$1[^\/]*$3").replace(/\*\*/g, ".*") + "$");
     }
 
     function matchRepo(filePatterns, repoPattern) {
