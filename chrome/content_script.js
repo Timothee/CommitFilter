@@ -1,8 +1,47 @@
 $(document).ready(function() {
     var currentRepo = $(".js-current-repository").first().attr('href');
 
+    chrome.runtime.onMessage.addListener(
+        function(request, sender, sendResponse) {
+            switch (request.action) {
+                case 'displayFileList': displayFileList(); break;
+                case 'removeFileList': removeFileList(); break;
+            }
+        }
+        );
+
+    window.addEventListener('scroll', highlightCurrentFile);
+    window.addEventListener('scroll', moveFileList);
+
     modifyInterface();
     getPatternsAndProcess();
+
+
+    /*
+     * File List
+     * Displays the list of modified files with the current file hightlighted
+     */
+    function displayFileList() {
+        var files = $('.file .meta');
+        console.log('displayFileList');
+    }
+
+    function removeFileList() {
+        $('.filelist').remove();
+        console.log('removeFileList');
+    }
+
+    function highlightCurrentFile() {
+        console.log('highlightCurrentFile');
+    }
+
+    function moveFileList() {
+        console.log('moveFileList');
+    }
+
+    /*
+     * File filtering
+     */
 
     function modifyInterface() {
         var files = $('.file');
