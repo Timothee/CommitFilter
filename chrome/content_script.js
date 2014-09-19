@@ -14,7 +14,7 @@ $(document).ready(function() {
     }
 
     function addFilterButton(file) {
-        $(file).find('.actions .button-group').prepend('<a class="minibutton filter-button">Filter</a>');
+        $(file).find('.actions').prepend('<a class="minibutton filter-button">Filter</a>');
         $(file).find('.filter-button').click(showNewFilterForm);
     }
 
